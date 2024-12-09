@@ -65,6 +65,11 @@ pip install -r requirements.txt
 python main.py --model lstm
 ```
 
+#### Train the Distilbert Model
+``` bash
+python main.py --model distilbert
+```
+
 #### Configuration
 
 Modify the hyperparameters in the YAML files located in the config/ directory:
