@@ -25,7 +25,7 @@ def objective(trial):
     # Load configuration
     project_root = os.path.dirname(os.path.abspath(__file__))
     # config_path = os.path.join(project_root, "config", "lstm_config.yaml")
-    config_path = r"C:\Users\ajayp\Desktop\AJAY\AI with ML Course\Sem-2\Advance Deep Learning\final_project\yelp_sentiment_analysis_LSTM_DistilBERT\config\lstm_config.yaml"
+    config_path = config_path = os.path.join(os.path.dirname(project_root), "..", "config", "lstm_config.yaml")
 
     with open(config_path, "r") as file:
         config = yaml.safe_load(file)
@@ -39,7 +39,7 @@ def objective(trial):
 
     # Paths for data
     # raw_data_path = os.path.join(project_root, "data", "raw", "yelp_reviews.csv")
-    raw_data_path = r"C:\Users\ajayp\Desktop\AJAY\AI with ML Course\Sem-2\Advance Deep Learning\final_project\yelp_sentiment_analysis_LSTM_DistilBERT\data\raw\yelp_reviews.csv"
+    raw_data_path = os.path.join(os.path.dirname(project_root), "..", "data", "raw", "yelp_reviews.csv")
     
     # Preprocess data
     X_train, X_val, y_train, y_val = preprocess_and_split(
