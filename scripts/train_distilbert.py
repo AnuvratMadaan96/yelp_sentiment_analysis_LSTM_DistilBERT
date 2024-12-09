@@ -17,9 +17,9 @@ from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_
 def train_distilbert_model(file_path, epochs, train_batch_size, eval_batch_size, device):
 
     raw_dataset = load_dataset('csv', data_files = file_path)
-    data = raw_dataset['train'].train_test_split(test_size=0.2, seed=42)
+    data = raw_dataset['train'].train_test_split(test_size=0.1, seed=42)
 
-    checkpoint ="distilbert-base-uncased"
+    checkpoint ="distilbert/distilbert-base-uncased-finetuned-sst-2-english"
     tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 
     def tokenize_func(batch):
@@ -29,7 +29,8 @@ def train_distilbert_model(file_path, epochs, train_batch_size, eval_batch_size,
     
     model = AutoModelForSequenceClassification.from_pretrained(
         checkpoint,
-        num_labels =3
+        num_labels =3,
+        ignore_mismatched_sizes=True
         )
     
     training_args = TrainingArguments(
@@ -65,7 +66,7 @@ def train_distilbert_model(file_path, epochs, train_batch_size, eval_batch_size,
 
     savemodel = pipeline('text-classification', model = latest_checkpoint, device = device)
 
-    y_pred = savemodel(data['test']['text'])
+    y_pred = savemodel(data['test']['text'], truncation=True)
 
     ypred = []
     for i in y_pred:
@@ -91,7 +92,7 @@ def train_distilbert_model(file_path, epochs, train_batch_size, eval_batch_size,
     fig.set_figheight(5)
     plt.show()
 
-    Accuracy = accuracy_score(data['test']['label'], ypred, normalize=True).round(3)
+    Accuracy = accuracy_score(data['test']['label'], ypred, normalize=True)
     Precision = precision_score(data['test']['label'], ypred, average = 'macro').round(3)   # macro calculate the average value of classes.
     Recall = recall_score(data['test']['label'], ypred, average = 'macro').round(3)
     F1_Score = f1_score(data['test']['label'], ypred, average = 'macro').round(3)
