@@ -25,7 +25,7 @@ def objective(trial):
     # Load configuration
     project_root = os.path.dirname(os.path.abspath(__file__))
     # config_path = os.path.join(project_root, "config", "lstm_config.yaml")
-    config_path = config_path = os.path.join(os.path.dirname(project_root), "..", "config", "lstm_config.yaml")
+    config_path = os.path.join(os.path.dirname(project_root), "..", "config", "lstm_config.yaml")
 
     with open(config_path, "r") as file:
         config = yaml.safe_load(file)
