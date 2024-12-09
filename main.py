@@ -3,7 +3,7 @@ import yaml
 import os
 import torch
 from scripts.train_lstm import train_lstm_model, evaluate_lstm_model
-# from scripts.train_distilbert import train_distilbert_model
+from scripts.train_distilbert import train_distilbert_model
 from utils.data_preprocessing import preprocess_and_split
 from utils.data_loader import create_dataloader
 from utils.utils import my_print
@@ -31,20 +31,21 @@ def main(args):
     # Paths for data
     raw_data_path = os.path.join(project_root, "data", "raw", "yelp_reviews.csv")
 
-    # Preprocess data
-    X_train, X_val, y_train, y_val = preprocess_and_split(
-        raw_data_path,
-        test_size=config['test_size'],
-        vocab_size=config.get('vocab_size', None),  # Only LSTM needs vocab_size
-        max_len=config['max_len']
-    )
-
-    # Create DataLoader instances
-    train_loader = create_dataloader(X_train, y_train, config['batch_size'], shuffle=True)
-    val_loader = create_dataloader(X_val, y_val, config['batch_size'], shuffle=False)
-
     # Train and Evaluate Model
     if args.model == "lstm":
+        # Preprocess data
+        X_train, X_val, y_train, y_val = preprocess_and_split(
+            raw_data_path,
+            args.model,
+            test_size=config['test_size'],
+            vocab_size=config.get('vocab_size', None),  # Only LSTM needs vocab_size
+            max_len=config['max_len']
+        )
+
+        # Create DataLoader instances
+        train_loader = create_dataloader(X_train, y_train, config['batch_size'], shuffle=True)
+        val_loader = create_dataloader(X_val, y_val, config['batch_size'], shuffle=False)
+
         my_print("Configuring LSTM Model and Starting to train")
         model = LSTMModel(
             vocab_size=config['vocab_size'],
@@ -56,8 +57,21 @@ def main(args):
         )
         train_lstm_model(config, device, train_loader, val_loader)
     elif args.model == "distilbert":
-        # train_distilbert_model(train_loader, val_loader, config, device)
-        pass
+        processed_file_path = preprocess_and_split(
+            raw_data_path,
+            args.model,
+            test_size=config.get('test_size', None),
+            vocab_size=config.get('vocab_size', None),  # Only LSTM needs vocab_size
+            max_len=config.get('max_len', None)
+        )
+        
+        train_distilbert_model(
+            processed_file_path, 
+            config.get('epochs', 1), 
+            config.get('train_batch_size', 16), 
+            config.get('eval_batch_size', 16),
+            device
+            )
 
     # Evaluate Model (optional)
     if args.evaluate:
