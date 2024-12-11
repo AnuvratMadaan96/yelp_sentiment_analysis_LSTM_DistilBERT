@@ -10,3 +10,17 @@ epochs: 1000
 learning_rate: 0.001
 test_size: 0.2
 patience: 10
+
+# if you are using LSTM hyperparameter tuning, please update this params
+# vocab_size: 20000
+# embedding_dim: 100       # Default value for tuning
+# hidden_dim: 128          # Default value for tuning
+# n_layers: 2              # Default value for tuning
+# dropout: 0.3             # Default value for tuning
+# learning_rate: 0.001     # Default value for tuning
+# batch_size: 64
+# max_len: 100
+# epochs: 50
+# patience: 5
+# test_size: 0.2
+# output_dim: 3            # Assuming there are 3 sentiment classes (positive, neutral, negative)
